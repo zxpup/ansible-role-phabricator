@@ -1,0 +1,9 @@
+---
+- name: email config template
+  template: src=mailers.json.j2
+            dest=/tmp/mailers.json
+- name: Ensure email config
+  shell: |
+    ./bin/config set --stdin cluster.mailers < /tmp/mailers.json
+  args:
+    chdir: "{{ phabricator_install_directory }}"

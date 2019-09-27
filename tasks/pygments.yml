@@ -1,0 +1,10 @@
+---
+- name: Install Pygments package
+  apt:
+    name: python-pygments
+    state: present
+
+- name: Enable Pygments in Phabricator configuration
+  command: ./bin/config set pygments.enabled true
+  args:
+    chdir: "{{ phabricator_install_directory }}"

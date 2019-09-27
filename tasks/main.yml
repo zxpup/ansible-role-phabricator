@@ -1,0 +1,79 @@
+---
+- name: Install packages
+  apt:
+    name:
+    - mercurial
+    - subversion
+    - git
+    - sendmail
+    state: present
+
+- name: Ensure group admin exists
+  group:
+    name: admin
+    state: present
+
+- name: Create phd user with admin privileges
+  user:
+    name: "{{ phabricator_phd_user }}"
+    shell: /bin/bash
+    group: admin
+    append: yes
+
+- name: Create VCS user
+  user:
+    name: "{{ phabricator_vcs_user }}"
+
+- name: Clone phabricator repository
+  become: yes
+  become_user: "{{ phabricator_phd_user }}"
+  register: phabricator
+  git:
+    repo: https://github.com/phacility/phabricator.git
+    dest: "{{ phabricator_install_directory }}"
+
+- name: Clone phutil repository
+  become: yes
+  become_user: "{{ phabricator_phd_user }}"
+  git:
+    repo: https://github.com/phacility/libphutil.git
+    dest: "{{ phabricator_libphutil_install_directory }}"
+
+- name: Clone arcanist repository
+  become: yes
+  become_user: "{{ phabricator_phd_user }}"
+  git:
+    repo: https://github.com/phacility/arcanist
+    dest: "{{ phabricator_arcanist_install_directory }}"
+
+- name: Set Base URI
+  command: ./bin/config set phabricator.base-uri 'http://{{ phabricator_hostname}}/'
+  args:
+    chdir: "{{ phabricator_install_directory }}"
+
+# Setup MySQL configuration and initialize database storage
+- include: database.yml
+
+# Setup Nginx virtualhosts
+- include: nginx.yml
+
+# Setup Phd daemon
+- include: daemon.yml
+
+# Setup local disk file storage
+- include: storage.yml
+
+# Setup Imagemagick
+- include: imagemagick.yml
+
+# Setup Pygments
+- include: pygments.yml
+
+# Setup Diffusion
+- include: diffusion.yml
+
+# Setup Upgrade Cron Script
+- include: upgrade.yml
+
+# Config EMAIL
+- include: email.yml

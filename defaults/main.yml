@@ -1,0 +1,15 @@
+---
+phabricator_hostname: phabricator.dev
+phabricator_alternate_file_domain: phabfiles.dev
+
+phabricator_web_user: www-data
+phabricator_phd_user: phd
+phabricator_vcs_user: git
+
+phabricator_sshd_port: 2222
+
+phabricator_home_directory: /home/phd
+phabricator_install_directory: /home/phd/phabricator
+phabricator_libphutil_install_directory: /home/phd/libphutil
+phabricator_arcanist_install_directory: /home/phd/arcanist
+phabricator_storage_local_disk_path: /home/phd/phabricator-files

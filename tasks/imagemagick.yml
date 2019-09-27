@@ -1,0 +1,10 @@
+---
+- name: Install Imagemagick package
+  apt:
+    name: imagemagick
+    state: present
+
+- name: Enable Imagemagick in Phabricator configuration
+  command: ./bin/config set files.enable-imagemagick true
+  args:
+    chdir: "{{ phabricator_install_directory }}"

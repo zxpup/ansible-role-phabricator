@@ -1,0 +1,18 @@
+---
+- name: Create phabricator-files directory
+  file:
+    path: "{{ phabricator_storage_local_disk_path }}"
+    owner: "{{ phabricator_phd_user }}"
+    state: directory
+    group: "{{ phabricator_web_user }}"
+    mode: 0775
+
+- name: Configure storage.local-disk.path
+  command: ./bin/config set storage.local-disk.path {{ phabricator_storage_local_disk_path }}
+  args:
+    chdir: "{{ phabricator_install_directory }}"
+
+#- name: Configure security.alternate-file-domain
+  #command: ./bin/config set security.alternate-file-domain 'http://{{ phabricator_alternate_file_domain }}/'
+  #args:
+    #chdir: "{{ phabricator_install_directory }}"
